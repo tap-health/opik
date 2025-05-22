@@ -56,3 +56,31 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{/*
+Spot instance configuration for cost optimization
+*/}}
+{{- define "opik.spotInstanceConfig" -}}
+{{- if .Values.spotInstance.enabled }}
+{{- if .Values.spotInstance.requireSpot }}
+tolerations:
+- key: "{{ .Values.spotInstance.taintKey }}"
+  operator: "Equal"
+  value: "true"
+  effect: "NoSchedule"
+nodeSelector:
+  cloud.google.com/gke-spot: "true"
+{{- else if .Values.spotInstance.preferSpot }}
+affinity:
+  nodeAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+    - weight: 1
+      preference:
+        matchExpressions:
+        - key: cloud.google.com/gke-spot
+          operator: In
+          values:
+          - "true"
+{{- end }}
+{{- end }}
+{{- end -}}

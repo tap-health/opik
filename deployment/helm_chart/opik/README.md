@@ -44,6 +44,43 @@ helm upgrade --install opik -n opik --create-namespace opik/opik \
     --set component.backend.image.tag=$VERSION --set component.frontend.image.tag=$VERSION
 ```
 
+## Cost Optimization with Spot Instances
+
+The Opik Helm chart supports running components on spot/preemptible instances to reduce costs. This can be configured through the `spotInstance` section in the values.yaml file:
+
+```yaml
+spotInstance:
+  enabled: true  # Enable spot instance support
+  preferSpot: true  # Prefer spot instances but allow regular ones if needed
+  requireSpot: false  # Require spot instances (may cause scheduling issues if none available)
+  taintKey: "cloud.google.com/gke-spot"  # Taint key for GKE spot instances
+```
+
+Different cloud providers use different taint/label keys for spot instances:
+- GKE: `cloud.google.com/gke-spot`
+- EKS: `eks.amazonaws.com/capacityType`
+- AKS: `kubernetes.azure.com/scalesetpriority`
+
+### Example Spot Instance Configurations
+
+To prefer spot instances but fall back to regular instances if none are available:
+
+```yaml
+spotInstance:
+  enabled: true
+  preferSpot: true
+  requireSpot: false
+```
+
+To strictly require spot instances:
+
+```yaml
+spotInstance:
+  enabled: true
+  preferSpot: false
+  requireSpot: true
+```
+
 ### Using helm chart from git repository
 
 ```bash

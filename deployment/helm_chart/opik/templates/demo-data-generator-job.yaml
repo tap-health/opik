@@ -19,6 +19,7 @@ spec:
       name:  {{ include "opik.name" $ }}-demo-data-generator
     spec:
       restartPolicy: Never
+      {{- include "opik.spotInstanceConfig" $ | nindent 6 }}
       initContainers:          
       - name: wait-for-python-backend-service
         image: curlimages/curl:8.12.1

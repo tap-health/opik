@@ -19,6 +19,7 @@ spec:
           {{- if .Values.clickhouse.backup.serviceAccount.enabled }}
           serviceAccountName: {{ .Values.clickhouse.backup.serviceAccount.name | default "clickhouse-backup" }}
           {{- end }}
+          {{- include "opik.spotInstanceConfig" $ | nindent 10 }}
           containers:
           - name: clickhouse-backup-job
             image: {{ .Values.clickhouse.image }}

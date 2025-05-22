@@ -10,6 +10,13 @@ basicAuth: false
 
 registry: &registry ghcr.io/comet-ml/opik
 
+# Spot instance configuration for cost optimization
+spotInstance:
+  enabled: false # Default to false for stability
+  preferSpot: false # Use node affinity to prefer spot instances (if available)
+  requireSpot: false # Force the application to only use spot instances
+  taintKey: "cloud.google.com/gke-spot" # Default for GKE, can be changed for other providers
+
 localFEAddress: "host.minikube.internal:5174"
 localFE: false
 
